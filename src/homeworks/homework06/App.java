@@ -1,8 +1,5 @@
 package homeworks.homework06;
 
-import attestation.attestation01.Person;
-import attestation.attestation01.Product;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
