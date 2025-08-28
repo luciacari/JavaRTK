@@ -1,4 +1,4 @@
-package homeworks.homework06;
+package homeworks.homework07;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -106,9 +106,9 @@ public class App {
     // метод для ввода продуктов со скидкой (new!)
     private static void addDiscountProducts(Scanner scanner) {
         System.out.println("Введите в одну строку обычные и скидочные продукты " +
-                '\n' + "(формат для обычного продукта: Наименование = стоимость ;) "+
-                '\n'+  "(формат для скидочного продукта: Наименование = стоимость = % скидки = срок действия (дата yyyy-MM-dd);) :" +
-                '\n'+ "Например: Хлеб = 40 = 0.20 = 2025-09-29; Молоко = 60; Торт = 1000 = 0.50 = 2025-09-30; Кофе растворимый = 879; Масло = 150 "
+                '\n' + "(формат для обычного продукта: Наименование = стоимость ;) " +
+                '\n' + "(формат для скидочного продукта: Наименование = стоимость = % скидки = срок действия (дата yyyy-MM-dd);) :" +
+                '\n' + "Например: Хлеб = 40 = 0.20 = 2025-09-29; Молоко = 60; Торт = 1000 = 0.50 = 2025-09-30; Кофе растворимый = 879; Масло = 150 "
         );
         String input = scanner.nextLine();
 
@@ -247,23 +247,24 @@ public class App {
             }
         }
     }
+
     private static Person findPersonByName(Person persons, String name) {
         //for (Person person : persons) {
-            if (persons.getName().equals(name)) {
-                System.out.println("findPersonByName");
-                return persons;
-            }
-       // }
+        if (persons.getName().equals(name)) {
+            System.out.println("findPersonByName");
+            return persons;
+        }
+        // }
         return null;
     }
 
     private static Product findProductByName(Product products, String name) {
         //for (Product product : products) {
-            if (products.getName().equals(name)) {
-                System.out.println("findProductByName");
-                return products;
+        if (products.getName().equals(name)) {
+            //System.out.println("findProductByName");
+            return products;
 
-            }
+        }
         //}
         return null;
     }

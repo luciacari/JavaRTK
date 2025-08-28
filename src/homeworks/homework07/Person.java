@@ -1,4 +1,4 @@
-package homeworks.homework06;
+package homeworks.homework07;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -51,7 +51,7 @@ public class Person {
 //        products.add(product);
 //        money -= product.getCost();
         double price;
-        if(product instanceof DiscountProduct) {
+        if (product instanceof DiscountProduct) {
             //System.out.println("addProduct product instanceof DiscountProduct");
             DiscountProduct discountProduct = (DiscountProduct) product;
             price = discountProduct.getDiscountedPrice();
