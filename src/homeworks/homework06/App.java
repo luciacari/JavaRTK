@@ -1,5 +1,6 @@
 package homeworks.homework06;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,7 +16,9 @@ public class App {
 
         if (!buyersList.isEmpty()) {
             //Вводим товары
-            addProducts(scanner);
+            //addProducts(scanner);
+            //Вводим товары обычные и со скидкой в одной строке
+            addDiscountProducts(scanner);
 
             if (!productsList.isEmpty()) {
                 System.out.println("Введите покупки (формат: Имя покупателя - Продукт):");
@@ -31,7 +34,7 @@ public class App {
 
     // метод для ввода покупателей
     private static void addBuyers(Scanner scanner) {
-        System.out.println("Введите покупателей (формат: Имя = деньги)");
+        System.out.println("Введите покупателей (формат: Имя = деньги;) в одну строку");
 
         String input = scanner.nextLine();
 
@@ -67,7 +70,7 @@ public class App {
 
     // метод для ввода продуктов
     private static void addProducts(Scanner scanner) {
-        System.out.println("Введите продукты (формат: Наименование = стоимость):");
+        System.out.println("Введите продукты (формат: Наименование = стоимость;) в одну строку:");
         String input = scanner.nextLine();
 
         String[] products = input.split(";");
@@ -93,6 +96,61 @@ public class App {
                 // присваиваем продукту стоимость и добавляем продукт в массив
                 if (flagUnique) {
                     productsList.add(p);
+                }
+            } else {
+                System.out.println("Ошибка: передана пустая строка вместо данных о продуктах!");
+            }
+        }
+    }
+
+    // метод для ввода продуктов со скидкой (new!)
+    private static void addDiscountProducts(Scanner scanner) {
+        System.out.println("Введите в одну строку обычные и скидочные продукты " +
+                '\n' + "(формат для обычного продукта: Наименование = стоимость ;) "+
+                '\n'+  "(формат для скидочного продукта: Наименование = стоимость = % скидки = срок действия (дата yyyy-MM-dd);) :" +
+                '\n'+ "Например: Хлеб = 40 = 0.20 = 2025-09-29; Молоко = 60; Торт = 1000 = 0.50 = 2025-09-30; Кофе растворимый = 879; Масло = 150 "
+        );
+        String input = scanner.nextLine();
+
+        String[] discountProducts = input.split(";");
+        for (String element : discountProducts) {
+            String[] array = element.trim().split("=");
+            if (array.length > 1) {
+                String name = array[0].trim();
+                double cost = Double.parseDouble(array[1].trim());
+                //double discountPercentage = Double.parseDouble(array[2].trim());
+                double discountPercentage = array.length > 2 && !array[2].trim().isEmpty()
+                        ? Double.parseDouble(array[2].trim())
+                        : 0.0; // значение по умолчанию
+                //LocalDate discountEndDate = LocalDate.parse(array[3].trim());
+                LocalDate discountEndDate = array.length > 3 && !array[3].trim().isEmpty()
+                        ? LocalDate.parse(array[3].trim())
+                        : LocalDate.now(); // значение по умолчанию
+                // если не заполнены 3 и 4 элементы массива продуктов, то это обычный продукт,
+                // а не продукт со скидкой
+                boolean isDiscountedProduct = array.length > 3 && !array[3].trim().isEmpty();
+                Product dp; //объявляем переменную типа Product без инициализации
+                if (isDiscountedProduct) {
+                    //если продукт со скидкой создаем продукт со скидкой
+                    dp = new DiscountProduct(name, cost, discountPercentage, discountEndDate);
+                } else {
+                    dp = new Product(name, cost);
+                }
+                System.out.println(dp); //печать переопределенного метода toString для продукта
+                boolean flagUnique = true;
+                for (Product pr : productsList) {
+                    // если продукт повторился во ввденных данных, то
+                    // переприсваиваем продукту стоимость и выходим из цикла, не добавляя в массив
+                    if (dp.equals(pr)) {
+                        pr.setCost(cost);
+                        flagUnique = false;
+                        break;
+                    }
+                }
+                //если продукт не повторяется во введенных данных,  то
+                // присваиваем продукту стоимость и добавляем продукт в массив
+                if (flagUnique) {
+                    productsList.add(dp);
                 }
             } else {
                 System.out.println("Ошибка: передана пустая строка вместо данных о продуктах!");
@@ -129,10 +187,23 @@ public class App {
                         }
 
                         if (i < buyersListSize && j < productsListSize) {
+                            double price;
+                            //Person person = findPersonByName(buyersList.get(i), buyersList.get(i).getName());
+                            Product product = findProductByName(productsList.get(j), productsList.get(j).getName());
                             if (buyersList.get(i).getMoney() >= productsList.get(j).getCost()) {
                                 buyersList.get(i).addProduct(productsList.get(j));
+                                //price = productsList.get(j).getCost();
+                                if (product instanceof DiscountProduct) {
+                                    // Если это DiscountProduct, получаем цену со скидкой
+                                    //System.out.println("product instanceof DiscountProduct");
+                                    price = ((DiscountProduct) product).getDiscountedPrice();
+                                } else {
+                                    // Для обычного продукта используем обычную цену
+                                    //System.out.println("обычная цена");
+                                    price = productsList.get(j).getCost();
+                                }
 
-                                System.out.println(buyersList.get(i).getName() + " купил " + productsList.get(j).getName());
+                                System.out.println(buyersList.get(i).getName() + " купил " + productsList.get(j).getName() + " за " + String.format("%.2f", price) + " руб.");
                                 //System.out.println("Остаток денежных средств: " + String.format("%.2f", buyersList.get(i).getMoney()) + " руб.");
                             } else {
                                 System.out.println(buyersList.get(i).getName() + " не может позволить себе " + productsList.get(j).getName());
@@ -175,5 +246,25 @@ public class App {
                 System.out.println();
             }
         }
+    }
+    private static Person findPersonByName(Person persons, String name) {
+        //for (Person person : persons) {
+            if (persons.getName().equals(name)) {
+                System.out.println("findPersonByName");
+                return persons;
+            }
+       // }
+        return null;
+    }
+
+    private static Product findProductByName(Product products, String name) {
+        //for (Product product : products) {
+            if (products.getName().equals(name)) {
+                System.out.println("findProductByName");
+                return products;
+
+            }
+        //}
+        return null;
     }
 }

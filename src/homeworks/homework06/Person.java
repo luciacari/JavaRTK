@@ -48,8 +48,19 @@ public class Person {
     }
 
     public void addProduct(Product product) {
+//        products.add(product);
+//        money -= product.getCost();
+        double price;
+        if(product instanceof DiscountProduct) {
+            //System.out.println("addProduct product instanceof DiscountProduct");
+            DiscountProduct discountProduct = (DiscountProduct) product;
+            price = discountProduct.getDiscountedPrice();
+        } else {
+            //System.out.println("addProduct обычная цена");
+            price = product.getCost();
+        }
         products.add(product);
-        money -= product.getCost();
+        money -= price;
     }
 
     // переопределение методов
