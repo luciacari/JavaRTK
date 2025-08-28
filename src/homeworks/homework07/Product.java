@@ -27,12 +27,20 @@ public class Product {
             System.out.println("Название продукта не может быть пустым!");
             System.exit(0);
         }
+        if (name.trim().length() < 3) {
+            System.out.println("Название продукта должно содержать не менее 3 символов!");
+            System.exit(0);
+        }
+        if (name.trim().matches("^\\d+$")) {
+            System.out.println("Название продукта не должно содержать только цифры");
+            System.exit(0);
+        }
         this.name = name.trim();
     }
 
     public void setCost(double cost) {
-        if (cost < 0) {
-            System.out.println("Стоимость продукта не может быть отрицательным числом!");
+        if (cost <= 0) {
+            System.out.println("Стоимость продукта не может быть 0 или отрицательным числом!");
             System.exit(0);
         }
         this.cost = cost;
