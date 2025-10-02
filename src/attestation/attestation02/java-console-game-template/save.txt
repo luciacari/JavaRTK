@@ -1,0 +1,2 @@
+player;Герой;20;5
+inventory;
